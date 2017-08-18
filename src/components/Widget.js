@@ -37,6 +37,7 @@ class App extends Component {
     this.setVisible = this.setVisible.bind(this);
     this.setTheme = this.setTheme.bind(this);
     this.handleFileUpload = this.handleFileUpload.bind(this);
+    this.sendAutoAnswer = this.sendAutoAnswer.bind(this);
   }
 
   componentDidMount() {
@@ -102,12 +103,12 @@ class App extends Component {
 
     // Immediately stop typing
     this.stopTyping.flush();
-    zChat.sendChatMsg(msg, (err) => {
-      if (err) {
-        log('Error occured >>>', err);
-        return;
-      }
-    });
+    // zChat.sendChatMsg(msg, (err) => {
+    //   if (err) {
+    //     log('Error occured >>>', err);
+    //     return;
+    //   }
+    // });
 
     this.props.dispatch({
       type: 'synthetic',
@@ -116,7 +117,25 @@ class App extends Component {
         msg
       }
     });
+
+    this.sendAutoAnswer();
+
     this.refs.input.getRawInput().value = '';
+  }
+
+
+  sendAutoAnswer(){
+    let msg = 'mi respuesta ' + Date.now();
+    this.props.dispatch({
+      type: 'chat',
+      detail: {
+        nick: 'agent:',
+        source:'local',
+        timestamp:Date.now(),
+        type: 'chat.msg',
+        msg
+      }
+    });
   }
 
   handleFileUpload(event) {
